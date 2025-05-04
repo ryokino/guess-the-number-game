@@ -37,22 +37,31 @@ fn main() {
 
     let secret_number = rand::random_range(min..=max);
 
-    let mut guess = String::new();
+    let mut count = 0;
 
-    println!("Please guess the number between {} and {}", min, max);
-    stdin.read_line(&mut guess).unwrap();
+    while count < 5 {
+        let mut guess = String::new();
 
-    let guess: i32 = match guess.trim().parse() {
-        Ok(n) => n,
-        Err(_) => {
-            println!("Invalid input. Please enter a valid integer.");
-            return;
+        println!("Please guess the number between {} and {}", min, max);
+        stdin.read_line(&mut guess).unwrap();
+
+        let guess: i32 = match guess.trim().parse() {
+            Ok(n) => n,
+            Err(_) => {
+                println!("Invalid input. Please enter a valid integer.");
+                return;
+            }
+        };
+
+        if guess == secret_number {
+            println!("You win!");
+            println!("You guessed the number in {} times.", count + 1);
+            break;
+        } else {
+            println!("You lose!");
+            println!("TRY AGAIN!");
+            count += 1;
+            continue;
         }
-    };
-
-    if guess == secret_number {
-        println!("You win!");
-    } else {
-        println!("You lose!");
     }
 }
