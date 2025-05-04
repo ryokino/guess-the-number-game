@@ -1,67 +1,16 @@
-use std::io;
+mod game;
+mod input;
 
 fn main() {
-    // 標準入力を促して最小値と最大値を入力させる。
-    let stdin = io::stdin();
+    println!("=== Guess The Number ===");
 
-    let mut min_str = String::new();
-    let mut max_str = String::new();
-
-    println!("Enter the minimum number: ");
-
-    stdin.read_line(&mut min_str).unwrap();
-    let min: i32 = match min_str.trim().parse() {
-        Ok(n) => n,
-        Err(_) => {
-            println!("Invalid input. Please enter a valid integer.");
-            return;
-        }
-    };
-
-    println!("Enter the maximum number: ");
-
-    stdin.read_line(&mut max_str).unwrap();
-
-    let max: i32 = match max_str.trim().parse() {
-        Ok(n) => n,
-        Err(_) => {
-            println!("Invalid input. Please enter a valid integer.");
-            return;
-        }
-    };
+    let min = input::read_int("最小の数を入力してね: ");
+    let max = input::read_int("最大の数を入力してね: ");
 
     if min > max {
-        println!("The minimum number must be less than the maximum number.");
+        eprintln!("最小値 < 最大値 で入力してね〜👍");
         return;
     }
 
-    let secret_number = rand::random_range(min..=max);
-
-    let mut count = 0;
-
-    while count < 5 {
-        let mut guess = String::new();
-
-        println!("Please guess the number between {} and {}", min, max);
-        stdin.read_line(&mut guess).unwrap();
-
-        let guess: i32 = match guess.trim().parse() {
-            Ok(n) => n,
-            Err(_) => {
-                println!("Invalid input. Please enter a valid integer.");
-                return;
-            }
-        };
-
-        if guess == secret_number {
-            println!("You win!");
-            println!("You guessed the number in {} times.", count + 1);
-            break;
-        } else {
-            println!("You lose!");
-            println!("TRY AGAIN!");
-            count += 1;
-            continue;
-        }
-    }
+    game::play(min, max);
 }
